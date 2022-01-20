@@ -1,0 +1,30 @@
+name: Deploy to github pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - run: chmod +x build-projects.sh
+
+      - name: Run build
+        run: ./build-projects.sh
+
+      - uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: ghpages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

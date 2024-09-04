@@ -34,6 +34,7 @@ public class Main implements ApplicationListener {
     public boolean clickedSplash;
     Texture splashTexture;
     ScreenViewport screenViewport;
+    public Preloader preloader;
 
     @Override
     public void create() {
@@ -41,7 +42,6 @@ public class Main implements ApplicationListener {
         bucketTexture = new Texture("bucket.png");
         dropTexture = new Texture("drop.png");
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(8, 5);
         bucketSprite = new Sprite(bucketTexture);
@@ -50,8 +50,6 @@ public class Main implements ApplicationListener {
         dropSprites = new Array<>();
         bucketRectangle = new Rectangle();
         dropRectangle = new Rectangle();
-        music.setLooping(true);
-        music.setVolume(.5f);
         splashTexture = new Texture("splash.png");
         screenViewport = new ScreenViewport();
     }
@@ -145,7 +143,12 @@ public class Main implements ApplicationListener {
         if (Gdx.input.isTouched()) {
             clickedSplash = true;
 
-            music.play();
+            preloader.preloadBundle("delayed-loading", bundle -> {
+                music = Gdx.audio.newMusic(Gdx.files.internal("delayed-loading/music.mp3"));
+                music.setLooping(true);
+                music.setVolume(.5f);
+                music.play();
+            });
         }
 
         float worldWidth = viewport.getWorldWidth();
